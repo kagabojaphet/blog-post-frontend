@@ -1,0 +1,117 @@
+// src/pages/admin/UsersAdmin.jsx
+import React, { useEffect, useState, useCallback } from "react";
+import AdminSidebar from "../../components/AdminSidebar";
+import { getUsers, createUser, updateUser, deleteUser } from "../../api/userApi";
+import { getToken } from "../../utils/authFetch";
+import UserForm from "../../components/UserForm";
+import UserTable from "../../components/UserTable"; // ✅ Import UserTable
+
+const UsersAdmin = () => {
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const token = getToken();
+
+  const fetchUsers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getUsers(token);
+      setUsers(data);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to fetch users.");
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  const handleCreateOrUpdate = async (formData) => {
+    try {
+      if (selectedUser) {
+        await updateUser(selectedUser._id, formData, token);
+        alert("User updated successfully!");
+      } else {
+        await createUser(formData, token);
+        alert("User created successfully!");
+      }
+      setShowForm(false);
+      setSelectedUser(null);
+      fetchUsers();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save user.");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this user?")) return;
+
+    try {
+      await deleteUser(id, token);
+      fetchUsers();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete user.");
+    }
+  };
+
+  const handleEdit = (user) => {
+    setSelectedUser(user);
+    setShowForm(true);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <div className="max-w-7xl mx-auto flex">
+        <AdminSidebar /> {/* ✅ Sidebar included */}
+        <main className="flex-1 p-8">
+          <div className="flex justify-between mb-4">
+            <h2 className="text-xl font-bold">Manage Users</h2>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  setShowForm(true);
+                  setSelectedUser(null);
+                }}
+                className="bg-blue-600 text-white px-4 py-2 rounded"
+              >
+                + Add User
+              </button>
+              <button
+                onClick={fetchUsers} // ✅ Refresh button
+                className="bg-gray-200 px-4 py-2 rounded"
+              >
+                Refresh
+              </button>
+            </div>
+          </div>
+
+          {showForm && (
+            <UserForm
+              onSubmit={handleCreateOrUpdate}
+              userToEdit={selectedUser}
+              onCancel={() => setShowForm(false)}
+            />
+          )}
+
+          {loading ? (
+            <div className="p-4 text-center text-gray-500">Loading users...</div>
+          ) : (
+            <UserTable 
+              users={users} 
+              onEdit={handleEdit} 
+              onDelete={handleDelete} 
+            />
+          )}
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default UsersAdmin;
