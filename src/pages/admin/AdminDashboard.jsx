@@ -14,20 +14,18 @@ const AdminDashboard = () => {
     comments: 0,
     contacts: 0,
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem("token");
-
-        const [blogs, users, contactsData] = await Promise.all([
-          getBlogs(),
-          getUsers(token),
-          getAllContacts(),
-        ]);
+        const blogs = await getBlogs();
+        const users = await getUsers(token);
+        const contacts = await getAllContacts();
 
         let totalComments = 0;
-        for (const blog of blogs) {
+        for (let blog of blogs) {
           const res = await fetchCommentsForBlog(blog._id);
           totalComments += res.data?.length || 0;
         }
@@ -36,10 +34,12 @@ const AdminDashboard = () => {
           blogs: blogs.length,
           users: users.length,
           comments: totalComments,
-          contacts: contactsData.length || 0,
+          contacts: contacts.data?.length || contacts.length,
         });
       } catch (err) {
         console.error("Failed to fetch stats:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -50,23 +50,45 @@ const AdminDashboard = () => {
     <DashboardLayout>
       <h1 className="text-3xl font-bold mb-8">Dashboard Overview</h1>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {Object.entries(stats).map(([key, value]) => (
-          <div
-            key={key}
-            className="bg-white p-6 rounded-lg shadow hover:shadow-lg text-center"
-          >
-            <h2 className="text-xl font-semibold capitalize">{key}</h2>
-            <p className="text-3xl text-blue-600 font-bold mt-2">{value}</p>
-          </div>
-        ))}
-      </div>
+      {loading ? (
+        <div className="flex justify-center items-center h-48">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600 border-gray-200"></div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {Object.entries(stats).map(([key, value]) => (
+            <div
+              key={key}
+              className="bg-white p-6 rounded-lg shadow hover:shadow-lg text-center"
+            >
+              <h2 className="text-xl font-semibold capitalize">{key}</h2>
+              <p className="text-3xl text-blue-600 font-bold mt-2">{value}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <AdminCard title="Contacts" to="/admin/contacts" desc="Manage user contact inquiries and replies." />
-        <AdminCard title="Users" to="/admin/users" desc="Manage registered users (create / update / delete)." />
-        <AdminCard title="Comments" to="/admin/comments" desc="Moderate and manage comments." />
-        <AdminCard title="Blogs" to="/admin/blogs" desc="Create, edit and remove blog posts." />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <AdminCard
+          title="Contacts"
+          to="/admin/contacts"
+          desc="Manage user contact inquiries and replies."
+        />
+        <AdminCard
+          title="Users"
+          to="/admin/users"
+          desc="Manage registered users (create / update / delete)."
+        />
+        <AdminCard
+          title="Comments"
+          to="/admin/comments"
+          desc="Moderate and manage comments."
+        />
+        <AdminCard
+          title="Blogs"
+          to="/admin/blogs"
+          desc="Create, edit and remove blog posts."
+        />
       </div>
     </DashboardLayout>
   );

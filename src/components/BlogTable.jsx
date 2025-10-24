@@ -1,8 +1,8 @@
 // src/components/BlogTable.jsx
 import React, { useState } from "react";
-import { FaTrash, FaEdit} from "react-icons/fa";
+import { FaTrash, FaEdit } from "react-icons/fa";
 
-const BlogTable = ({ blogs, onDelete, onEdit,  }) => {
+const BlogTable = ({ blogs, onDelete, onEdit }) => {
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   const confirmDelete = (id) => setDeleteTarget(id);
@@ -16,7 +16,6 @@ const BlogTable = ({ blogs, onDelete, onEdit,  }) => {
     <div className="bg-white rounded shadow p-4 relative">
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-lg font-semibold">Blogs</h3>
-     
       </div>
 
       <div className="overflow-x-auto">
@@ -27,6 +26,8 @@ const BlogTable = ({ blogs, onDelete, onEdit,  }) => {
               <th className="py-2 px-3">Category</th>
               <th className="py-2 px-3">Author</th>
               <th className="py-2 px-3">Likes</th>
+              <th className="py-2 px-3">Dislikes</th>
+              <th className="py-2 px-3">Comments</th>
               <th className="py-2 px-3">Shares</th>
               <th className="py-2 px-3">Actions</th>
             </tr>
@@ -34,7 +35,7 @@ const BlogTable = ({ blogs, onDelete, onEdit,  }) => {
           <tbody>
             {blogs.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center py-4 text-gray-500">
+                <td colSpan="8" className="text-center py-4 text-gray-500">
                   No blogs found.
                 </td>
               </tr>
@@ -45,6 +46,8 @@ const BlogTable = ({ blogs, onDelete, onEdit,  }) => {
                   <td className="py-2 px-3">{b.category || "—"}</td>
                   <td className="py-2 px-3">{b.author?.name || "Unknown"}</td>
                   <td className="py-2 px-3">{b.likes?.length || 0}</td>
+                  <td className="py-2 px-3">{b.dislikes?.length || 0}</td>
+                  <td className="py-2 px-3">{b.comments?.length || 0}</td>
                   <td className="py-2 px-3">{b.shares?.length || 0}</td>
                   <td className="py-2 px-3">
                     <div className="flex gap-2">
