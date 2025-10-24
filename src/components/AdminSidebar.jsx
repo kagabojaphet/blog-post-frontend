@@ -1,3 +1,4 @@
+// src/components/AdminSidebar.jsx
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaBars, FaTimes, FaSignOutAlt } from "react-icons/fa";
@@ -23,7 +24,11 @@ const AdminSidebar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    // Remove both user info and token
+    localStorage.removeItem("user");
     localStorage.removeItem("token");
+    // Close sidebar on mobile
+    setIsOpen(false);
     navigate("/login");
   };
 
@@ -70,7 +75,7 @@ const AdminSidebar = () => {
           </div>
         </div>
 
-        {/* Bottom Logout Button (Left-aligned) */}
+        {/* Bottom Logout Button */}
         <div className="border-t border-gray-200 pt-4 mt-6">
           <button
             onClick={handleLogout}

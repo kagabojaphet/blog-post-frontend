@@ -31,14 +31,14 @@ const SinglePost = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/blogs/${id}`);
+        const res = await axios.get(`https://blog-post-backend-qrtf.onrender.com/api/blogs/${id}`);
         const currentPost = res.data;
         setPost(currentPost);
         setComments(currentPost.comments || []);
 
         if (currentPost.category) {
           const relatedRes = await axios.get(
-            `http://localhost:5000/api/blogs?category=${encodeURIComponent(currentPost.category)}`
+            `https://blog-post-backend-qrtf.onrender.com/api/blogs?category=${encodeURIComponent(currentPost.category)}`
           );
           const sameCategory = relatedRes.data.filter(
             (b) => b._id !== currentPost._id && b.category === currentPost.category
@@ -70,7 +70,7 @@ const SinglePost = () => {
     if (!user) return alert("Please login first.");
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/blogs/${id}/${action}`,
+        `https://blog-post-backend-qrtf.onrender.com/api/blogs/${id}/${action}`,
         {},
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
@@ -86,7 +86,7 @@ const SinglePost = () => {
     if (!user) return alert("Please login first.");
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/blogs/${id}/share`,
+        `https://blog-post-backend-qrtf.onrender.com/api/blogs/${id}/share`,
         {},
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
@@ -105,7 +105,7 @@ const SinglePost = () => {
     try {
       setCommentLoading(true);
       const res = await axios.post(
-        `http://localhost:5000/api/comments/${id}`,
+        `https://blog-post-backend-qrtf.onrender.com/api/comments/${id}`,
         { content: newComment },
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
@@ -153,7 +153,7 @@ const SinglePost = () => {
         {/* Main Blog */}
         <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-lg">
           <img
-            src={post.image || "https://via.placeholder.com/800x400"}
+            src={post.image || "blog image"}
             alt={post.title}
             className="w-full mb-4 rounded-lg object-cover shadow-sm"
           />
@@ -286,7 +286,7 @@ const SinglePost = () => {
                   className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-md transition"
                 >
                   <img
-                    src={b.image || "https://via.placeholder.com/40"}
+                    src={b.image || "blog image"}
                     alt={b.title}
                     className="w-10 h-10 rounded-md object-cover"
                   />

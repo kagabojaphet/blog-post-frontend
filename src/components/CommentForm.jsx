@@ -15,7 +15,7 @@ const CommentForm = ({ blogId, token, comment, onClose, onSaved }) => {
         : `/comments/${blogId}`;
       const method = comment ? "PUT" : "POST";
 
-      const res = await fetch(`http://localhost:5000/api${url}`, {
+      const res = await fetch(`https://blog-post-backend-qrtf.onrender.com/api${url}`, {
         method,
         headers: {
           "Content-Type": "application/json",

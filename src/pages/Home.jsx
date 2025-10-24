@@ -21,7 +21,7 @@ const Home = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/blogs");
+        const res = await axios.get("https://blog-post-backend-qrtf.onrender.com/api/blogs");
         setBlogs(res.data);
       } catch (err) {
         console.error("Error fetching blogs:", err);
@@ -60,7 +60,7 @@ const Home = () => {
               className="bg-white rounded-lg shadow-sm hover:shadow-md transition duration-300 transform hover:-translate-y-1 overflow-hidden"
             >
               <img
-                src={blog.image || "https://via.placeholder.com/400x250"}
+                src={blog.image || "blogs image"}
                 alt={blog.title}
                 className="w-full h-40 object-cover cursor-pointer"
                 onClick={() => navigate(`/blog/${blog._id}`)}

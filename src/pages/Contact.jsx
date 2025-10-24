@@ -41,7 +41,7 @@ const Contact = () => {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:5000/api/contacts", formData); // Removed unused `response`
+      await axios.post("https://blog-post-backend-qrtf.onrender.com/api/contacts", formData); // Removed unused `response`
       setStatus({ type: "success", message: "Message sent successfully!" });
       setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (err) {
