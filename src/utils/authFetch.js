@@ -2,16 +2,29 @@
 import axios from "axios";
 import api from "../api/axios";
 
-// Helper to get token
+// Helper to get token from localStorage
 export const getToken = () => localStorage.getItem("token");
 
-// Function to create an axios instance with Authorization header
-export const authFetch = (token = null) => {
-  return axios.create({
-    baseURL: api.defaults.baseURL, // same base URL as your main api instance
-    headers: {
-      Authorization: token ? `Bearer ${token}` : "",
-      "Content-Type": "application/json",
-    },
-  });
-};
+// Create an Axios instance that automatically includes the token
+const authFetch = axios.create({
+  baseURL: api.defaults.baseURL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Add a request interceptor to attach the token dynamically
+authFetch.interceptors.request.use(
+  (config) => {
+    const token = getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export default authFetch;
