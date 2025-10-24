@@ -1,8 +1,8 @@
 // src/components/BlogTable.jsx
 import React, { useState } from "react";
-import { FaTrash, FaEdit, FaSync } from "react-icons/fa";
+import { FaTrash, FaEdit} from "react-icons/fa";
 
-const BlogTable = ({ blogs, onDelete, onEdit, onRefresh }) => {
+const BlogTable = ({ blogs, onDelete, onEdit,  }) => {
   const [deleteTarget, setDeleteTarget] = useState(null);
 
   const confirmDelete = (id) => setDeleteTarget(id);
@@ -16,14 +16,7 @@ const BlogTable = ({ blogs, onDelete, onEdit, onRefresh }) => {
     <div className="bg-white rounded shadow p-4 relative">
       <div className="flex justify-between items-center mb-3">
         <h3 className="text-lg font-semibold">Blogs</h3>
-        {onRefresh && (
-          <button
-            onClick={onRefresh}
-            className="flex items-center gap-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            <FaSync /> Refresh
-          </button>
-        )}
+     
       </div>
 
       <div className="overflow-x-auto">

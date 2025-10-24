@@ -1,8 +1,10 @@
+// src/pages/admin/ContactsAdmin.jsx
 import React, { useEffect, useState, useCallback } from "react";
 import AdminSidebar from "../../components/AdminSidebar";
 import ContactTable from "../../components/ContactTable";
 import ContactForm from "../../components/ContactForm";
 import { getAllContacts, deleteAllContacts } from "../../api/contactApi";
+import { FaSync } from "react-icons/fa";
 
 const ContactsAdmin = () => {
   const [contacts, setContacts] = useState([]);
@@ -54,25 +56,25 @@ const ContactsAdmin = () => {
 
   useEffect(() => {
     fetchContacts();
-  }, [fetchContacts]); // ✅ fixed warning
+  }, [fetchContacts]);
 
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="max-w-7xl mx-auto flex">
-        <AdminSidebar />
+        <AdminSidebar /> {/* ✅ Sidebar included */}
         <main className="flex-1 p-8">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold">Contacts</h1>
-            <div className="space-x-2">
+            <div className="flex gap-2">
               <button
-                onClick={fetchContacts}
-                className="px-3 py-1 bg-white border rounded shadow-sm"
+                onClick={fetchContacts} // ✅ Refresh
+                className="flex items-center gap-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
               >
-                Refresh
+                <FaSync /> Refresh
               </button>
               <button
                 onClick={handleDeleteAll}
-                className="px-3 py-1 bg-red-600 text-white rounded shadow-sm"
+                className="px-4 bg-red-600 text-white py-2 rounded hover:bg-red-700"
               >
                 Delete All
               </button>
@@ -81,9 +83,9 @@ const ContactsAdmin = () => {
                   setSelectedContact(null);
                   setShowForm(true);
                 }}
-                className="px-3 py-1 bg-blue-600 text-white rounded shadow-sm"
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
               >
-                Add Contact
+                 + Add Contact
               </button>
             </div>
           </div>
