@@ -1,7 +1,7 @@
 // src/pages/admin/UsersAdmin.jsx
 import React, { useEffect, useState, useCallback } from "react";
 import AdminSidebar from "../../components/AdminSidebar"; // ✅ Sidebar
-import { getUsers, createUser, updateUser, deleteUser, deleteAllUsers } from "../../api/userApi";
+import { getUsers, createUser, updateUser, deleteUser } from "../../api/userApi";
 import { getToken } from "../../utils/authFetch";
 import UserForm from "../../components/UserForm";
 import UserTable from "../../components/UserTable"; // ✅ Import UserTable
@@ -51,23 +51,13 @@ const UsersAdmin = () => {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
+
     try {
       await deleteUser(id, token);
       fetchUsers();
     } catch (err) {
       console.error(err);
       alert("Failed to delete user.");
-    }
-  };
-
-  const handleDeleteAll = async () => {
-    if (!window.confirm("Are you sure you want to delete all users?")) return;
-    try {
-      await deleteAllUsers(token);
-      fetchUsers();
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete all users.");
     }
   };
 
@@ -81,7 +71,6 @@ const UsersAdmin = () => {
       <div className="max-w-7xl mx-auto flex">
         <AdminSidebar /> {/* ✅ Sidebar included */}
         <main className="flex-1 p-8">
-          {/* Page title and action buttons */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Manage Users</h2>
             <div className="flex gap-2">
@@ -91,14 +80,6 @@ const UsersAdmin = () => {
               >
                 <FaSync /> Refresh
               </button>
-
-              <button
-                onClick={handleDeleteAll} // ✅ Delete All button
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-              >
-                Delete All
-              </button>
-
               <button
                 onClick={() => {
                   setShowForm(true);
@@ -108,10 +89,10 @@ const UsersAdmin = () => {
               >
                 + Add User
               </button>
+              
             </div>
           </div>
 
-          {/* User form */}
           {showForm && (
             <UserForm
               onSubmit={handleCreateOrUpdate}
@@ -120,7 +101,6 @@ const UsersAdmin = () => {
             />
           )}
 
-          {/* Users table */}
           {loading ? (
             <div className="p-4 text-center text-gray-500">Loading users...</div>
           ) : (

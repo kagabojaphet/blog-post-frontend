@@ -38,4 +38,5 @@ export const deleteAllUsers = async (token) => {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
+  
 };
